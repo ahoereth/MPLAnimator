@@ -74,7 +74,7 @@ class Animator:
         if len(os.listdir(self.dir)) == 0:
             print("precompiling images...")
             for i in range(self.max_frame):
-                print("compiling frame {}/{}".format(i, self.max_frame))
+                print("compiling frame {}/{}".format(i + 1, self.max_frame))
                 self.frame_handle(i)
                 plt.savefig("{}/{}.png".format(self.dir, i))
 
@@ -99,7 +99,7 @@ class Animator:
         for file in os.listdir(self.dir):
             os.remove(self.dir + "/" + file)
 
-    def run(self, clear = False, precompile = True):
+    def run(self, clear = False, precompile = True, initialFrame = 0):
         if clear:
             self.clear()
         if precompile:
@@ -109,9 +109,6 @@ class Animator:
         self.precompiled_cb.setChecked(precompile)
 
         self.w.show()
-        self.visualize(0)
+        self.visualize(initialFrame)
+        self.slider.setValue(initialFrame)
         self.qApp.exec()
-
-
-
-
