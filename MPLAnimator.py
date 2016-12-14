@@ -74,7 +74,7 @@ class Animator:
         if len(os.listdir(self.dir)) == 0:
             print("precompiling images...")
             for i in range(self.max_frame):
-                print("compiling frame {}/{}".format(i, self.max_frame))
+                print("compiling frame {}/{}".format(i + 1, self.max_frame))
                 self.frame_handle(i)
                 plt.savefig("{}/{}.png".format(self.dir, i))
 
