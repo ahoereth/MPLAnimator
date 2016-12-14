@@ -99,7 +99,7 @@ class Animator:
         for file in os.listdir(self.dir):
             os.remove(self.dir + "/" + file)
 
-    def run(self, clear = False, precompile = True):
+    def run(self, clear = False, precompile = True, initialFrame = 0):
         if clear:
             self.clear()
         if precompile:
@@ -109,9 +109,6 @@ class Animator:
         self.precompiled_cb.setChecked(precompile)
 
         self.w.show()
-        self.visualize(0)
+        self.visualize(initialFrame)
+        self.slider.setValue(initialFrame)
         self.qApp.exec()
-
-
-
-
