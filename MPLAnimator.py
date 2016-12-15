@@ -1,22 +1,21 @@
 import matplotlib
-import matplotlib.backend_bases
 matplotlib.use("Qt5Agg")
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.Qt import Qt
+
 import tempfile
 import os
 
+# imports currently only for type-hinting
+import matplotlib.backend_bases
+
+
+
 
 class Animator:
-
-
-    def mouseFun(self, event: matplotlib.backend_bases.MouseEvent):
-        self.click_cb(**(event.__dict__))
-        self.visualize()
-
-
 
     def __init__(self, name = None, setup_handle = None):
         self.qApp = QtWidgets.QApplication([])
@@ -40,10 +39,10 @@ class Animator:
         self.slider.valueChanged.connect(self.visualize)
         layout.addWidget(self.slider)
 
-        self.precompiled_cb = QtWidgets.QCheckBox("Precompiled")
-        layout.addWidget(self.precompiled_cb)
+        self.prerender_checkbox = QtWidgets.QCheckBox("Prerendered")
+        layout.addWidget(self.prerender_checkbox)
 
-        self.precompiled = None
+        self.prerendered = None
 
         self.name = name
         if name == None:
@@ -51,7 +50,7 @@ class Animator:
             self.dir = self.tmpdir.name
             self.name = 'animator_'+self.dir
         else:
-            self.dir = ".precompiled/" + name
+            self.dir = ".prerendered/" + name
             if not os.path.exists(self.dir):
                 os.makedirs(self.dir)
 
@@ -66,25 +65,29 @@ class Animator:
     def setClickCallback(self, click_cb):
         self.click_cb = click_cb
 
-    def recompile(self):
+    def rerender(self):
         self.clear()
-        self.precompile()
+        self.prerender()
 
-    def precompile(self):
+    def prerender(self):
         if len(os.listdir(self.dir)) == 0:
-            print("precompiling images...")
+            print("prerendering images...")
             for i in range(self.max_frame):
-                print("compiling frame {}/{}".format(i + 1, self.max_frame))
+                print("rendering frame {}/{}".format(i + 1, self.max_frame))
                 self.frame_handle(i)
                 plt.savefig("{}/{}.png".format(self.dir, i))
+
+    def mouseFun(self, event: matplotlib.backend_bases.MouseEvent):
+        self.click_cb(**(event.__dict__))
+        self.visualize()
 
 
     def visualize(self, i = None):
         if i == None:
             i = self.slider.value()
-        if self.precompiled_cb.isChecked():
-            if not self.precompiled:
-                self.precompile()
+        if self.prerender_checkbox.isChecked():
+            if not self.prerendered:
+                self.prerender()
             if self.stack.currentWidget() != self.label:
                 self.stack.setCurrentWidget(self.label)
             pm = QtGui.QPixmap("{}/{}.png".format(self.dir, i))
@@ -99,14 +102,14 @@ class Animator:
         for file in os.listdir(self.dir):
             os.remove(self.dir + "/" + file)
 
-    def run(self, clear = False, precompile = True, initialFrame = 0):
+    def run(self, clear = False, prerendered = True, initialFrame = 0):
         if clear:
             self.clear()
-        if precompile:
-            self.precompile()
+        if prerendered:
+            self.prerender()
 
-        self.precompiled = precompile
-        self.precompiled_cb.setChecked(precompile)
+        self.prerendered = prerendered
+        self.prerender_checkbox.setChecked(prerendered)
 
         self.w.show()
         self.visualize(initialFrame)
