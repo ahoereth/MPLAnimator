@@ -14,7 +14,6 @@ import matplotlib.backend_bases
 
 
 
-
 class Animator:
 
     def __init__(self, name = None, setup_handle = None):
