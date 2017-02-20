@@ -1,5 +1,5 @@
 import matplotlib
-matplotlib.use("Qt5Agg")
+matplotlib.use('Qt5Agg')
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
@@ -31,7 +31,7 @@ class Animator:
             self.dir = self.tmpdir.name
             self.name = 'animator_'+self.dir
         else:
-            self.dir = ".prerendered/" + name
+            self.dir = '.prerendered/' + name
             if not os.path.exists(self.dir):
                 os.makedirs(self.dir)
 
@@ -62,7 +62,7 @@ class Animator:
         self.layout.addWidget(self.slider)
 
         # checkbox for toggling pre-rendered mode
-        self.prerender_checkbox = QtWidgets.QCheckBox("Pre-rendered")
+        self.prerender_checkbox = QtWidgets.QCheckBox('Pre-rendered')
         self.layout.addWidget(self.prerender_checkbox)
 
 
@@ -83,11 +83,11 @@ class Animator:
 
     def prerender(self):
         if len(os.listdir(self.dir)) == 0:
-            print("pre-rendering images...")
+            print('pre-rendering images...')
             for i in range(self.max_frame):
-                print("rendering frame {}/{}".format(i + 1, self.max_frame))
+                print('rendering frame {}/{}'.format(i + 1, self.max_frame))
                 self.frame_cb(i)
-                plt.savefig("{}/{}.png".format(self.dir, i))
+                plt.savefig('{}/{}.png'.format(self.dir, i))
 
 
     def handleCanvasClick(self, event: matplotlib.backend_bases.MouseEvent):
@@ -103,7 +103,7 @@ class Animator:
                 self.prerender()
             if self.stack.currentWidget() != self.label:
                 self.stack.setCurrentWidget(self.label)
-            pm = QtGui.QPixmap("{}/{}.png".format(self.dir, i))
+            pm = QtGui.QPixmap('{}/{}.png'.format(self.dir, i))
             self.label.setPixmap(pm)
         else:
             if self.stack.currentWidget() != self.canvas:
@@ -114,7 +114,7 @@ class Animator:
 
     def clear(self):
         for file in os.listdir(self.dir):
-            os.remove(self.dir + "/" + file)
+            os.remove(self.dir + '/' + file)
 
 
     def run(self, clear=False, prerendered=True, initialFrame=0):
