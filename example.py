@@ -51,7 +51,6 @@ def frame(i):
 
 
 
-
 a = Animator(name='NaiveEstimator', setup_handle=setup)
 a.setFrameCallback(frame_handle=frame, max_frame=80)
 a.run(clear=False, prerendered=True)

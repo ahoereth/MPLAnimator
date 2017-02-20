@@ -14,8 +14,17 @@ import matplotlib.backend_bases
 
 
 class Animator:
+    """Class for rendering and displaying matplotlib animations in a nice UI."""
 
-    def __init__(self, name=None, setup_handle=None):
+    def __init__(self, name=None, setup_cb=None):
+        """Create an animator instance.
+
+        Args:
+            name (str, optional): Name describing the animation. If none is provided, a random name will be generated.
+            setup_cb (function): Callback function for initial setup of the animator.
+
+        """
+
         self.qApp = QtWidgets.QApplication([])
 
         self.initUI()
@@ -35,11 +44,13 @@ class Animator:
             if not os.path.exists(self.dir):
                 os.makedirs(self.dir)
 
-        if setup_handle:
-            setup_handle()
+        if setup_cb:
+            setup_cb()
 
 
     def initUI(self):
+        """Initialize the UI."""
+
         # main widget with vbox-layout for displaying the figure at the top and the controls below
         self.w = QtWidgets.QWidget()
         self.layout = QtWidgets.QVBoxLayout()
@@ -67,21 +78,31 @@ class Animator:
 
 
     def setFrameCallback(self, frame_cb, max_frame):
+        """Set frame-callback relevant attributes.
+
+        Args:
+            frame_cb (function): Callback function for frame updates.
+            max_frame (int): Maximum frame number.
+
+        """
+
         self.frame_cb = frame_cb
         self.max_frame = max_frame
         self.slider.setMaximum(max_frame - 1)
 
 
     def setClickCallback(self, click_cb):
+        """Set click-callback relevant attributes.
+
+        Args:
+           click_cb (function): Callback function for UI clicks.
+
+        """
         self.click_cb = click_cb
 
 
-    def rerender(self):
-        self.clear()
-        self.prerender()
-
-
     def prerender(self):
+        """Prerender the animation."""
         if len(os.listdir(self.dir)) == 0:
             print('pre-rendering images...')
             for i in range(self.max_frame):
@@ -91,13 +112,22 @@ class Animator:
 
 
     def handleCanvasClick(self, event: matplotlib.backend_bases.MouseEvent):
+        """Unpack canvas click event to click callback function."""
         self.click_cb(**(event.__dict__))
         self.visualize()
 
 
-    def visualize(self, i = None):
+    def visualize(self, i=None):
+        """Update visualization for set frame.
+
+        Args:
+            i (int, default): Frame number to update to. Defaults to currently set frame number of the main slider.
+
+        """
+
         if i == None:
             i = self.slider.value()
+
         if self.prerender_checkbox.isChecked():
             if not self.prerendered:
                 self.prerender()
@@ -113,11 +143,24 @@ class Animator:
 
 
     def clear(self):
+        """Clear pre-rendered images."""
+
         for file in os.listdir(self.dir):
             os.remove(self.dir + '/' + file)
 
 
     def run(self, clear=False, prerendered=True, initialFrame=0):
+        """Start the animator.
+
+        The function will block and also start PyQt in the background.
+
+        Args:
+            clear (bool): Whether to clear potentially existing pre-rendered images.
+            prerendered (bool): Whether to use pre-rendered images. If there are already images saved, these are used.
+            initialFrame (int): Frame number to start the animation with.
+
+        """
+
         if clear:
             self.clear()
         if prerendered:
