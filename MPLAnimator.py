@@ -134,7 +134,10 @@ class Animator:
             if self.stack.currentWidget() != self.label:
                 self.stack.setCurrentWidget(self.label)
             pm = QtGui.QPixmap('{}/{}.png'.format(self.dir, i))
+            pm = pm.scaled(self.label.width(), self.label.height(),
+                           Qt.KeepAspectRatio, Qt.SmoothTransformation)
             self.label.setPixmap(pm)
+            self.label.setMinimumSize(1, 1)  # Allow downsizing the window.
         else:
             if self.stack.currentWidget() != self.canvas:
                 self.stack.setCurrentWidget(self.canvas)
