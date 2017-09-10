@@ -50,7 +50,6 @@ def frame(i):
     plt.xlim(-0.5, 8.5)
 
 
-
-a = Animator(name='NaiveEstimator', setup_handle=setup)
-a.setFrameCallback(frame_handle=frame, max_frame=80)
+a = Animator(name='NaiveEstimator', setup_cb=setup)
+a.setFrameCallback(frame_cb=frame, max_frame=80)
 a.run(clear=False, prerendered=True)
