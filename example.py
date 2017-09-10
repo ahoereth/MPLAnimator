@@ -4,31 +4,35 @@ matplotlib.use("Qt5Agg")
 import matplotlib.pyplot as plt
 from MPLAnimator import Animator
 
+
 def naive_estimator(x, data, h):
-    n = sum(1 for d in data if x-h/2 < d <= x+h/2)
+    n = sum(1 for d in data if x - h / 2 < d <= x + h / 2)
     N = len(data)
-    return n/(N*h)
+    return n / (N * h)
+
 
 data = [0.5, 0.7, 0.8, 1.9, 2.4, 6.1, 6.2, 7.3]
 xs = np.arange(0, 8, 0.01)
 h = 2
 hist = [naive_estimator(x, data, h) for x in xs]
 
+
 def setup():
     plt.gcf()
     plt.suptitle("Naive Estimator for h = {}".format(h))
+
 
 def frame(i):
     plt.cla()
 
     # plot original data
     plt.plot(xs, hist)
-    plt.plot(data, [0]*len(data), 'xk')
+    plt.plot(data, [0] * len(data), 'xk')
     plt.axhline(0, color='k', linewidth=0.5)
 
     # calculate current interval
     x = i / 10
-    x1, x2 = x-h/2, x+h/2
+    x1, x2 = x - h / 2, x + h / 2
 
     # calculate relative width for visualization
     axis_to_data = plt.gca().transAxes + plt.gca().transData.inverted()
@@ -45,7 +49,7 @@ def frame(i):
 
     # highlight data in interval
     highlight_data = [d for d in data if x1 < d <= x2]
-    plt.plot(highlight_data, [0]*len(highlight_data), 'oC3')
+    plt.plot(highlight_data, [0] * len(highlight_data), 'oC3')
 
     plt.xlim(-0.5, 8.5)
 

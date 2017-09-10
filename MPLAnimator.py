@@ -38,7 +38,7 @@ class Animator:
         if name == None:
             self.tmpdir = tempfile.TemporaryDirectory()
             self.dir = self.tmpdir.name
-            self.name = 'animator_'+self.dir
+            self.name = 'animator_' + self.dir
         else:
             self.dir = '.prerendered/' + name
             if not os.path.exists(self.dir):
@@ -46,7 +46,6 @@ class Animator:
 
         if setup_cb:
             setup_cb()
-
 
     def initUI(self):
         """Initialize the UI."""
@@ -78,7 +77,6 @@ class Animator:
         self.prerender_checkbox = QtWidgets.QCheckBox('Pre-rendered')
         self.layout.addWidget(self.prerender_checkbox)
 
-
     def setFrameCallback(self, frame_cb, max_frame):
         """Set frame-callback relevant attributes.
 
@@ -92,7 +90,6 @@ class Animator:
         self.max_frame = max_frame
         self.slider.setMaximum(max_frame - 1)
 
-
     def setClickCallback(self, click_cb):
         """Set click-callback relevant attributes.
 
@@ -101,7 +98,6 @@ class Animator:
 
         """
         self.click_cb = click_cb
-
 
     def prerender(self):
         """Prerender the animation."""
@@ -112,12 +108,10 @@ class Animator:
                 self.frame_cb(i)
                 plt.savefig('{}/{}.png'.format(self.dir, i))
 
-
     def handleCanvasClick(self, event: matplotlib.backend_bases.MouseEvent):
         """Unpack canvas click event to click callback function."""
         self.click_cb(**(event.__dict__))
         self.visualize()
-
 
     def visualize(self, i=None):
         """Update visualization for set frame.
@@ -141,7 +135,6 @@ class Animator:
                 self.stack.setCurrentWidget(self.canvas)
             self.frame_cb(i)
             self.canvas.draw()
-
 
     def clear(self):
         """Clear pre-rendered images."""
