@@ -61,6 +61,7 @@ class Animator:
         self.stack = QtWidgets.QStackedLayout()
         self.layout.addLayout(self.stack)
         self.label = QtWidgets.QLabel()
+        self.label.setAlignment(Qt.AlignCenter)
         self.stack.addWidget(self.label)
         self.fig = plt.figure()
         self.canvas = FigureCanvas(self.fig)
