@@ -55,6 +55,7 @@ class Animator:
         self.w = QtWidgets.QWidget()
         self.layout = QtWidgets.QVBoxLayout()
         self.w.setLayout(self.layout)
+        self.w.resizeEvent = self._onResize
 
         # using a stacked layout for the figure
         # allows for quick exchange between pre-rendered image-view vs matplotlib figure
@@ -134,11 +135,7 @@ class Animator:
                 self.prerender()
             if self.stack.currentWidget() != self.label:
                 self.stack.setCurrentWidget(self.label)
-            pm = QtGui.QPixmap('{}/{}.png'.format(self.dir, i))
-            pm = pm.scaled(self.label.width(), self.label.height(),
-                           Qt.KeepAspectRatio, Qt.SmoothTransformation)
-            self.label.setPixmap(pm)
-            self.label.setMinimumSize(1, 1)  # Allow downsizing the window.
+            self._renderFrameFromFile(i)
         else:
             if self.stack.currentWidget() != self.canvas:
                 self.stack.setCurrentWidget(self.canvas)
@@ -179,3 +176,18 @@ class Animator:
         self.visualize(initialFrame)
         self.slider.setValue(initialFrame)
         self.qApp.exec()
+
+    def _renderFrameFromFile(self, i=None):
+        """Render graphic from file given a frame number."""
+        if i == None:
+            i = self.slider.value()
+        pm = QtGui.QPixmap('{}/{}.png'.format(self.dir, i))
+        pm = pm.scaled(self.label.width(), self.label.height(),
+                       Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        self.label.setPixmap(pm)
+        self.label.setMinimumSize(1, 1)  # Allow downsizing the window.
+
+    def _onResize(self, event):  # pylint: disable=unused-argument
+        """Re-render prerendered graphics on window resize."""
+        if self.prerender_checkbox.isChecked():
+            self._renderFrameFromFile()
