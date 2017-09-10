@@ -15,7 +15,7 @@ h = 2
 hist = [naive_estimator(x, data, h) for x in xs]
 
 def setup():
-    plt.gcf().set_size_inches(8,6)
+    plt.gcf()
     plt.suptitle("Naive Estimator for h = {}".format(h))
 
 def frame(i):
@@ -52,4 +52,4 @@ def frame(i):
 
 a = Animator(name='NaiveEstimator', setup_cb=setup)
 a.setFrameCallback(frame_cb=frame, max_frame=80)
-a.run(clear=False, prerendered=True)
+a.run(clear=False, prerendered=False)

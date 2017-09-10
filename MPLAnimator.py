@@ -151,15 +151,17 @@ class Animator:
         for file in os.listdir(self.dir):
             os.remove(self.dir + '/' + file)
 
-
-    def run(self, clear=False, prerendered=True, initialFrame=0):
+    def run(self, clear=False, prerendered=False, initialFrame=0):
         """Start the animator.
 
         The function will block and also start PyQt in the background.
 
         Args:
             clear (bool): Whether to clear potentially existing pre-rendered images.
-            prerendered (bool): Whether to use pre-rendered images. If there are already images saved, these are used.
+            prerendered (bool): Whether to use pre-rendered images.
+                If there are already images saved, these are used.
+                Turned off by default because resizing the window before pre-
+                rendering will give better quality results.
             initialFrame (int): Frame number to start the animation with.
 
         """
