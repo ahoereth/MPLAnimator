@@ -110,7 +110,8 @@ class Animator:
 
     def handleCanvasClick(self, event: matplotlib.backend_bases.MouseEvent):
         """Unpack canvas click event to click callback function."""
-        self.click_cb(**(event.__dict__))
+        if hasattr(self, 'click') and self.click is not None:
+            self.click_cb(**(event.__dict__))
         self.visualize()
 
     def visualize(self, i=None):
